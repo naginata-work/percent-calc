@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator / パーセント計算機</title>
+<meta name="description" content="○は□の何%?、□の○%は?、増減率は?をまとめて計算できるパーセント計算機。">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4214020669195548"
+     crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #0f1416; --card: #192124; --text: #eef4f6; --sub: #8ea3aa;
+    --accent: #2dd4bf; --accent2: #fbbf24; --border: #223034;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Hiragino Kaku Gothic ProN", "Segoe UI", Arial, sans-serif;
+    background: var(--bg); color: var(--text); padding: 16px;
+  }
+  .wrap { max-width: 460px; margin: 0 auto; }
+  .top-row { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+  .lang-btn { background: none; border: 1px solid var(--border); color: var(--sub); border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  h1 { font-size: 21px; text-align: center; margin: 4px 0 4px; }
+  .lead { text-align: center; color: var(--sub); font-size: 13px; margin-bottom: 18px; line-height: 1.6; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .tabs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .tabs button {
+    padding: 10px; border: 1px solid var(--border); border-radius: 8px;
+    background: none; color: var(--sub); font-size: 13px; cursor: pointer; text-align: left;
+  }
+  .tabs button.active { background: var(--accent); color: #05201c; border-color: var(--accent); font-weight: bold; }
+  .inputs-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: 14px; }
+  input[type="number"] { width: 90px; padding: 9px; font-size: 14px; border: 1px solid var(--border); border-radius: 8px; background: #101718; color: var(--text); }
+  .result-box {
+    background: #101718; border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+    text-align: center; font-size: 24px; font-weight: bold; color: var(--accent2);
+  }
+  .footer-links { text-align: center; font-size: 12px; color: var(--sub); margin-top: 4px; line-height: 1.8; }
+  .footer-links a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row"><button class="lang-btn" id="langBtn">EN</button></div>
+  <h1 id="title">🧮 パーセント計算機</h1>
+  <p class="lead" id="lead">割合・増減率をまとめて計算できます。</p>
+
+  <div class="card">
+    <div class="tabs">
+      <button id="tabA" class="active"></button>
+      <button id="tabB"></button>
+      <button id="tabC"></button>
+    </div>
+
+    <div id="inputsA" class="inputs-row">
+      <input type="number" id="a1" value="25">
+      <span id="isWhatPercentOfLabel"></span>
+      <input type="number" id="a2" value="200">
+      <span>?</span>
+    </div>
+    <div id="inputsB" class="inputs-row" style="display:none;">
+      <input type="number" id="b1" value="15">
+      <span>%</span>
+      <span id="ofLabel"></span>
+      <input type="number" id="b2" value="200">
+      <span>?</span>
+    </div>
+    <div id="inputsC" class="inputs-row" style="display:none;">
+      <input type="number" id="c1" value="100">
+      <span id="changeToLabel"></span>
+      <input type="number" id="c2" value="130">
+      <span>?</span>
+    </div>
+
+    <div class="result-box" id="result">-</div>
+  </div>
+
+  <p class="footer-links" id="footerLinks"></p>
+</div>
+
+<script>
+  const I18N = {
+    ja: {
+      title: '🧮 パーセント計算機',
+      lead: '割合・増減率をまとめて計算できます。',
+      tabA: '○は□の何%?',
+      tabB: '□の○%は?',
+      tabC: '○から□への増減率は?',
+      isWhatPercentOfLabel: 'は',
+      ofLabel: 'の',
+      changeToLabel: '→',
+      resultA: (a1, a2, r) => `${a1} は ${a2} の ${r}% です`,
+      resultB: (b1, b2, r) => `${b2} の ${b1}% は ${r} です`,
+      resultC: (c1, c2, r, dir) => `${c1} → ${c2} は ${dir}${r}% です`,
+      increase: '増加率:',
+      decrease: '減少率:',
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">日付差分計算機</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">料理の単位換算</a>'
+    },
+    en: {
+      title: '🧮 Percentage Calculator',
+      lead: 'Quickly calculate percentages and percent change.',
+      tabA: 'X is what % of Y?',
+      tabB: 'What is X% of Y?',
+      tabC: 'Percent change from X to Y?',
+      isWhatPercentOfLabel: 'is what % of',
+      ofLabel: '% of',
+      changeToLabel: '→',
+      resultA: (a1, a2, r) => `${a1} is ${r}% of ${a2}`,
+      resultB: (b1, b2, r) => `${b1}% of ${b2} is ${r}`,
+      resultC: (c1, c2, r, dir) => `${c1} → ${c2} is a ${r}% ${dir}`,
+      increase: 'increase',
+      decrease: 'decrease',
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">Date Difference Calculator</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">Cooking Unit Converter</a>'
+    }
+  };
+
+  function loadLang() { try { return localStorage.getItem('percentCalcLang'); } catch (e) { return null; } }
+  function saveLang(l) { try { localStorage.setItem('percentCalcLang', l); } catch (e) {} }
+  let lang = loadLang() === 'en' ? 'en' : 'ja';
+  function t() { return I18N[lang]; }
+
+  let mode = 'A';
+
+  function fmt(n) {
+    return Math.round(n * 100) / 100;
+  }
+
+  function calc() {
+    const result = document.getElementById('result');
+    if (mode === 'A') {
+      const a1 = parseFloat(document.getElementById('a1').value);
+      const a2 = parseFloat(document.getElementById('a2').value);
+      if (isNaN(a1) || isNaN(a2) || a2 === 0) { result.textContent = '-'; return; }
+      result.textContent = t().resultA(a1, a2, fmt((a1 / a2) * 100));
+    } else if (mode === 'B') {
+      const b1 = parseFloat(document.getElementById('b1').value);
+      const b2 = parseFloat(document.getElementById('b2').value);
+      if (isNaN(b1) || isNaN(b2)) { result.textContent = '-'; return; }
+      result.textContent = t().resultB(b1, b2, fmt((b1 / 100) * b2));
+    } else {
+      const c1 = parseFloat(document.getElementById('c1').value);
+      const c2 = parseFloat(document.getElementById('c2').value);
+      if (isNaN(c1) || isNaN(c2) || c1 === 0) { result.textContent = '-'; return; }
+      const pct = ((c2 - c1) / Math.abs(c1)) * 100;
+      const dir = pct >= 0 ? t().increase : t().decrease;
+      result.textContent = t().resultC(c1, c2, fmt(Math.abs(pct)), dir);
+    }
+  }
+
+  ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calc);
+  });
+
+  function setMode(m, btnId) {
+    mode = m;
+    ['tabA', 'tabB', 'tabC'].forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById(btnId).classList.add('active');
+    document.getElementById('inputsA').style.display = m === 'A' ? 'flex' : 'none';
+    document.getElementById('inputsB').style.display = m === 'B' ? 'flex' : 'none';
+    document.getElementById('inputsC').style.display = m === 'C' ? 'flex' : 'none';
+    calc();
+  }
+  document.getElementById('tabA').addEventListener('click', () => setMode('A', 'tabA'));
+  document.getElementById('tabB').addEventListener('click', () => setMode('B', 'tabB'));
+  document.getElementById('tabC').addEventListener('click', () => setMode('C', 'tabC'));
+
+  function renderStaticText() {
+    document.getElementById('title').textContent = t().title;
+    document.getElementById('lead').textContent = t().lead;
+    document.getElementById('tabA').textContent = t().tabA;
+    document.getElementById('tabB').textContent = t().tabB;
+    document.getElementById('tabC').textContent = t().tabC;
+    document.getElementById('isWhatPercentOfLabel').textContent = t().isWhatPercentOfLabel;
+    document.getElementById('ofLabel').textContent = t().ofLabel;
+    document.getElementById('changeToLabel').textContent = t().changeToLabel;
+    document.getElementById('footerLinks').innerHTML = t().footerLinks;
+    calc();
+  }
+
+  document.getElementById('langBtn').addEventListener('click', () => {
+    lang = lang === 'ja' ? 'en' : 'ja';
+    saveLang(lang);
+    document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+    renderStaticText();
+  });
+
+  document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+  renderStaticText();
+</script>
+</body>
+</html>
