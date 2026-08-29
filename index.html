@@ -76,7 +76,25 @@
     <div class="result-box" id="result">-</div>
   </div>
 
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="aboutTitle" style="font-size:15px; color:var(--text); margin:0 0 8px;"></h2>
+    <p id="aboutBody1" style="margin:0 0 10px;"></p>
+    <p id="aboutBody2" style="margin:0;"></p>
+  </div>
+
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="faqTitle" style="font-size:15px; color:var(--text); margin:0 0 10px;"></h2>
+    <p id="faq1Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq1A" style="margin:0 0 12px;"></p>
+    <p id="faq2Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq2A" style="margin:0;"></p>
+  </div>
+
   <p class="footer-links" id="footerLinks"></p>
+  <p style="text-align:center; font-size:11px; color:var(--sub); margin-top:4px;">
+    <a href="https://naginata-work.github.io/" style="color:var(--sub);" id="allToolsLink"></a> ・
+    <a href="https://naginata-work.github.io/privacy.html" style="color:var(--sub);" id="privacyLink"></a>
+  </p>
 </div>
 
 <script>
@@ -95,7 +113,15 @@
       resultC: (c1, c2, r, dir) => `${c1} → ${c2} は ${dir}${r}% です`,
       increase: '増加率:',
       decrease: '減少率:',
-      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">日付差分計算機</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">料理の単位換算</a>'
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">日付差分計算機</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">料理の単位換算</a>',
+      aboutTitle: '使い方について',
+      aboutBody1: '割引率の計算、テストの得点率、前年比の売上の伸び率など、パーセントの計算は日常のあちこちに登場しますが、いざ電卓を叩こうとすると「割るのはどっちだっけ」と迷うことがよくあります。',
+      aboutBody2: 'このツールは「○は□の何%?」「□の○%は?」「○から□への増減率は?」という、つまずきやすい3パターンをタブで切り替えて計算できます。数値を入力するとリアルタイムで結果が表示されるので、電卓のように何度も打ち直す必要がありません。',
+      faqTitle: 'よくある質問',
+      faq1Q: '「増減率」がマイナスになるのはどんな時?',
+      faq1A: '基準値(1つ目の数値)より結果の値(2つ目の数値)が小さくなった場合に、減少率として表示されます。例えば100から80になった場合は「20%減少」と表示されます。',
+      faq2Q: '小数点はどこまで正確に計算される?',
+      faq2A: '内部的には浮動小数点数で正確に計算し、表示は小数点以下2桁までに丸めています。日常的な計算であれば十分な精度です。',
     },
     en: {
       title: '🧮 Percentage Calculator',
@@ -111,7 +137,15 @@
       resultC: (c1, c2, r, dir) => `${c1} → ${c2} is a ${r}% ${dir}`,
       increase: 'increase',
       decrease: 'decrease',
-      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">Date Difference Calculator</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">Cooking Unit Converter</a>'
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/date-diff/" target="_blank" rel="noopener">Date Difference Calculator</a> / <a href="https://naginata-work.github.io/cook-convert/" target="_blank" rel="noopener">Cooking Unit Converter</a>',
+      aboutTitle: 'How it works',
+      aboutBody1: "Discount percentages, test scores, year-over-year sales growth — percentage math shows up constantly, but it's easy to blank on which number goes on top when you actually need to do it.",
+      aboutBody2: 'This tool covers the three patterns people most often get stuck on — "X is what % of Y," "what is X% of Y," and "percent change from X to Y" — as switchable tabs. Results update live as you type, so there\'s no need to re-enter numbers like on a standard calculator.',
+      faqTitle: 'FAQ',
+      faq1Q: 'When does the percent change show up as a decrease?',
+      faq1A: "It's shown as a decrease whenever the second number is smaller than the first. For example, going from 100 to 80 displays as a 20% decrease.",
+      faq2Q: 'How precise are the calculations?',
+      faq2A: "Internally it calculates with full floating-point precision and rounds the display to two decimal places — more than enough accuracy for everyday use.",
     }
   };
 
@@ -175,6 +209,18 @@
     document.getElementById('ofLabel').textContent = t().ofLabel;
     document.getElementById('changeToLabel').textContent = t().changeToLabel;
     document.getElementById('footerLinks').innerHTML = t().footerLinks;
+    document.getElementById('aboutTitle').textContent = t().aboutTitle;
+    document.getElementById('aboutBody1').textContent = t().aboutBody1;
+    document.getElementById('aboutBody2').textContent = t().aboutBody2;
+    document.getElementById('faqTitle').textContent = t().faqTitle;
+    document.getElementById('faq1Q').textContent = t().faq1Q;
+    document.getElementById('faq1A').textContent = t().faq1A;
+    document.getElementById('faq2Q').textContent = t().faq2Q;
+    document.getElementById('faq2A').textContent = t().faq2A;
+    document.getElementById('allToolsLink').textContent = lang === 'ja' ? '他のツール一覧' : 'All tools';
+    document.getElementById('allToolsLink').href = 'https://naginata-work.github.io/';
+    document.getElementById('privacyLink').textContent = lang === 'ja' ? 'プライバシーポリシー' : 'Privacy policy';
+    document.getElementById('privacyLink').href = 'https://naginata-work.github.io/privacy.html';
     calc();
   }
 
